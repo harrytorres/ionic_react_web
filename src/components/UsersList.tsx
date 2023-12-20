@@ -47,7 +47,7 @@ interface UsersState {
   error: string | null;
 }
 
-function UsersList() {
+const UsersList: React.FC<{numberOfUsers: number}> = ({ numberOfUsers }) => {
 
   const [userState, setUserState] = useState<UsersState>({
     users: null,
@@ -60,7 +60,7 @@ function UsersList() {
       const fetchUsers = async () => {
         try {
           setLoading(true);
-          const response = await fetchData('?results=100');
+          const response = await fetchData(`?results=${numberOfUsers}`);
           if(response !== null){
             setLoading(false);
             setUserState({ users: response.results, error: null });
@@ -69,8 +69,10 @@ function UsersList() {
           setUserState({ users: null, error: error.message });
         }
       };
+
       fetchUsers();
-    }, []);
+
+  }, [numberOfUsers]);
     
   if (loading) {
     return <IonLoading message="Loading..." duration={3000} />;
